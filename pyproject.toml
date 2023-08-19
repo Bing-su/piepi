@@ -10,11 +10,14 @@ readme = "README.md"
 python = "^3.9"
 django-ninja = ">=1.0a3"
 orjson = "*"
+airium = "^0.2.5"
+granian = "^0.5.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
 ruff = "*"
 pre-commit = "*"
+twine = "*"
 
 [build-system]
 requires = ["poetry-core"]
