@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "piepi"
+version = "0.1.0"
+description = "pypi"
+authors = ["Bingsu <ks2515@naver.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+django-ninja = ">=1.0a3"
+orjson = "*"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+ruff = "*"
+pre-commit = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+select = ["A", "B", "C4", "C90", "E", "EM", "F", "FA", "I001", "ISC", "N", "PIE", "PT", "RET", "RUF", "SIM", "UP", "W"]
+ignore = ["B008", "B905", "E501"]
+unfixable = ["F401"]
