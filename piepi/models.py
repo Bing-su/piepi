@@ -12,7 +12,7 @@ def directory_path(instance: Package, filename: str):
 class Package(models.Model):
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to=directory_path)
-    filename = models.CharField(max_length=255)
+    filename = models.CharField(max_length=255, unique=True)
     sha256 = models.CharField(max_length=64)
 
     metadata = models.BinaryField(blank=True)
