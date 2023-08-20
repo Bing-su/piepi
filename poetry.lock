@@ -904,6 +904,20 @@ files = [
 plugins = ["importlib-metadata"]
 
 [[package]]
+name = "python-dotenv"
+version = "1.0.0"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "python-dotenv-1.0.0.tar.gz", hash = "sha256:a8df96034aae6d2d50a4ebe8216326c61c3eb64836776504fcca410e5937a3ba"},
+    {file = "python_dotenv-1.0.0-py3-none-any.whl", hash = "sha256:f5971a9226b701070a4bf2c38c89e5a3f0d64de8debda981d1db98583009122a"},
+]
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "pywin32-ctypes"
 version = "0.2.2"
 description = "A (partial) reimplementation of pywin32 using ctypes/cffi"
@@ -1254,4 +1268,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "9fdf6904a76d09f47cacb95b405c1e9783dab8650c1a0fb85d7e4d244ec4326d"
+content-hash = "2cab9ec1723e9c4029ad2e1f01dd3e358189863249bfa3e540f9727f31f1b6bf"

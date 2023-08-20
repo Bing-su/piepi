@@ -11,6 +11,7 @@ python = "^3.9"
 django-ninja = ">=1.0a3"
 django-cleanup = "8.0.0"
 orjson = "*"
+python-dotenv = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
