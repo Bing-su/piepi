@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "ninja",
-    "piepi.apps.PiepiConfig",
+    "server.apps.ServerConfig",
 ]
 
 MIDDLEWARE = [

@@ -10,13 +10,13 @@ def directory_path(instance: Package, filename: str):
 
 
 class Package(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, editable=False)
     file = models.FileField(upload_to=directory_path)
-    filename = models.CharField(max_length=255, unique=True)
-    sha256 = models.CharField(max_length=64)
+    filename = models.CharField(max_length=255, editable=False, unique=True)
+    sha256 = models.CharField(max_length=64, editable=False)
 
     metadata = models.BinaryField(blank=True)
-    requires_python = models.CharField(max_length=64, blank=True)
+    requires_python = models.CharField(max_length=64, blank=True, editable=False)
 
     @property
     def dist_info_metadata(self) -> str:
