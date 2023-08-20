@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import re
 from pathlib import Path
 from typing import Literal
+from urllib.parse import urljoin
 from zipfile import ZipFile
 
+from django.http import FileResponse, HttpRequest, HttpResponse
 from ninja import Field, File, Form, Router, Schema, UploadedFile
 from ninja.errors import HttpError
 from pydantic import Extra, constr
@@ -82,7 +85,11 @@ def get_metadata(content: UploadedFile) -> bytes:
 
 
 @router.post("/")
-def upload(request, content: UploadedFile = File(...), metadata: Metadata = Form(...)):
+def upload(
+    request: HttpRequest,
+    content: UploadedFile = File(...),
+    metadata: Metadata = Form(...),
+):
     if not content.name.endswith((".tar.gz", ".whl")):
         msg = "Only '.tar.gz' and '.whl' files are supported."
         raise HttpError(400, msg)
@@ -101,3 +108,69 @@ def upload(request, content: UploadedFile = File(...), metadata: Metadata = Form
     )
     package.save()
     return package.file.url
+
+
+@router.get("/")
+def index(request: HttpRequest, response: HttpResponse):
+    response["Content-Type"] = "application/vnd.pypi.simple.v1+json"
+    ret = {"meta": {"api-version": "1.0"}}
+    name_set = set()
+
+    for package in Package.objects.all():
+        name_set.add(package.name)
+    names = sorted(name_set)
+    ret["projects"] = [{"name": name} for name in names]
+    return ret
+
+
+@router.get("/{name}/")
+def packages(
+    request: HttpRequest,
+    response: HttpResponse,
+    name: str,
+):
+    name = normalize(name)
+
+    packages = Package.objects.filter(name=name)
+    if not packages.exists():
+        msg = f"{name!r} package does not exist."
+        raise HttpError(404, msg)
+
+    response["Content-Type"] = "application/vnd.pypi.simple.v1+json"
+    ret = {"meta": {"api-version": "1.0"}, "name": name, "files": []}
+
+    for package in packages:
+        data = {
+            "filename": package.filename,
+            "url": urljoin(request.build_absolute_uri("/"), package.file.url),
+            "hashes": {"sha256": package.sha256},
+        }
+        if package.requires_python:
+            data["requires-python"] = package.requires_python
+        if package.metadata:
+            data["dist-info-metadata"] = {"sha256": package.dist_info_metadata}
+        ret["files"].append(data)
+    return ret
+
+
+@router.get("/{name}/{filename}")
+def download(
+    request: HttpRequest,
+    name: str,
+    filename: str,
+):
+    name = normalize(name)
+
+    metadata = False
+    if filename.endswith(".metadata"):
+        metadata = True
+        filename = filename.removesuffix(".metadata")
+
+    packages = Package.objects.filter(name=name, filename=filename)
+    if not packages.exists():
+        msg = f"{name!r} package does not exist."
+        raise HttpError(404, msg)
+
+    if metadata:
+        return FileResponse(io.BytesIO(packages[0].metadata))
+    return FileResponse(packages[0].file)
