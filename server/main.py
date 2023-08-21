@@ -100,6 +100,7 @@ def upload(
 
     package = Package.objects.create(
         name=normalize(metadata.name),
+        version=metadata.version,
         file=content,
         filename=content.name,
         sha256=get_sha256(content, metadata),
@@ -144,7 +145,7 @@ def packages(
         if package.requires_python:
             data["requires-python"] = package.requires_python
         if package.metadata:
-            data["dist-info-metadata"] = {"sha256": package.dist_info_metadata}
+            data["dist-info-metadata"] = package.dist_info_metadata
         ret["files"].append(data)
     return ret
 

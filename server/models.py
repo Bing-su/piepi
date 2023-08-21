@@ -11,6 +11,7 @@ def directory_path(instance: Package, filename: str):
 
 class Package(models.Model):
     name = models.CharField(max_length=255, editable=False)
+    version = models.CharField(max_length=64, editable=False)
     file = models.FileField(upload_to=directory_path)
     filename = models.CharField(max_length=255, editable=False, unique=True)
     sha256 = models.CharField(max_length=64, editable=False)
@@ -19,8 +20,9 @@ class Package(models.Model):
     requires_python = models.CharField(max_length=64, blank=True, editable=False)
 
     @property
-    def dist_info_metadata(self) -> str:
-        return hashlib.sha256(self.metadata).hexdigest()
+    def dist_info_metadata(self) -> dict[str, str]:
+        sha256 = hashlib.sha256(self.metadata).hexdigest()
+        return {"sha256": sha256}
 
     def __repr__(self):
         return f"<Package {self.filename!r}>"
