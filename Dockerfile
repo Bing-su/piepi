@@ -13,7 +13,7 @@ COPY . .
 
 RUN python manage.py migrate && \
     python manage.py collectstatic --noinput && \
-    python manage.py createsuperuser --noinput --username ${DJANGO_SUPERUSER_NAME} --email ${DJANGO_SUPERUSER_EMAIL}
+    python manage.py createsuperuser --noinput --username ${DJANGO_SUPERUSER_NAME} --email ${DJANGO_SUPERUSER_EMAIL} || true
 
 EXPOSE 8182
 CMD ["granian", "--interface", "wsgi", "--host", "0.0.0.0", "--port", "8182", "piepi.wsgi_docker:application"]

@@ -20,6 +20,6 @@ if not SECRET_KEY:
         file.write(f"\nSECRET_KEY={SECRET_KEY}\n")
     os.environ["SECRET_KEY"] = SECRET_KEY
 
-default_media_root = Path.home().joinpath("packages").as_posix()
+default_media_root = BASE_DIR.joinpath("packages").as_posix()
 MEDIA_ROOT = os.getenv("MEDIA_ROOT", default_media_root)
 DEFAULT_LOGGING["handlers"]["console"]["filters"].clear()
