@@ -98,7 +98,7 @@ def upload(
         msg = f"Package with this name({content.name}) already exists."
         raise HttpError(400, msg)
 
-    package = Package(
+    package = Package.objects.create(
         name=normalize(metadata.name),
         file=content,
         filename=content.name,
@@ -106,19 +106,15 @@ def upload(
         metadata=get_metadata(content),
         requires_python=metadata.requires_python,
     )
-    package.save()
-    return package.file.url
+    return urljoin(request.build_absolute_uri("/"), package.file.url)
 
 
 @router.get("/")
 def index(request: HttpRequest, response: HttpResponse):
     response["Content-Type"] = "application/vnd.pypi.simple.v1+json"
     ret = {"meta": {"api-version": "1.0"}}
-    name_set = set()
 
-    for package in Package.objects.all():
-        name_set.add(package.name)
-    names = sorted(name_set)
+    names = Package.objects.values_list("name", flat=True).distinct().order_by("name")
     ret["projects"] = [{"name": name} for name in names]
     return ret
 
@@ -166,11 +162,17 @@ def download(
         metadata = True
         filename = filename.removesuffix(".metadata")
 
-    packages = Package.objects.filter(name=name, filename=filename)
-    if not packages.exists():
+    try:
+        package = Package.objects.get(filename=filename)
+    except Package.DoesNotExist as e:
+        msg = f"{name!r} package does not exist."
+        raise HttpError(404, msg) from e
+
+    if not Path(package.file.path).exists():
+        package.delete()
         msg = f"{name!r} package does not exist."
         raise HttpError(404, msg)
 
     if metadata:
-        return FileResponse(io.BytesIO(packages[0].metadata))
-    return FileResponse(packages[0].file)
+        return FileResponse(io.BytesIO(package.metadata))
+    return FileResponse(package.file)
