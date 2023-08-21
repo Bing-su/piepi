@@ -8,9 +8,11 @@ from typing import Literal
 from urllib.parse import urljoin
 from zipfile import ZipFile
 
+from django.contrib.auth import authenticate
 from django.http import FileResponse, HttpRequest, HttpResponse
 from ninja import Field, File, Form, Router, Schema, UploadedFile
 from ninja.errors import HttpError
+from ninja.security import HttpBasicAuth
 from pydantic import Extra, constr
 
 from .models import Package
@@ -56,6 +58,12 @@ class Metadata(Schema, extra=Extra.allow):
     pyversion: str = ""
 
 
+class BasicAuth(HttpBasicAuth):
+    def authenticate(self, request: HttpRequest, username: str, password: str):
+        user = authenticate(username=username, password=password)
+        return user is not None and user.is_active
+
+
 def normalize(name: str) -> str:
     return re.sub(r"[-_\.]+", "-", name).lower()
 
@@ -84,7 +92,7 @@ def get_metadata(content: UploadedFile) -> bytes:
     return data
 
 
-@router.post("/")
+@router.post("/", auth=BasicAuth())
 def upload(
     request: HttpRequest,
     content: UploadedFile = File(...),
