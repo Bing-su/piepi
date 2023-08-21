@@ -21,3 +21,9 @@ class Package(models.Model):
     @property
     def dist_info_metadata(self) -> str:
         return hashlib.sha256(self.metadata).hexdigest()
+
+    def __repr__(self):
+        return f"<Package {self.filename!r}>"
+
+    def __str__(self):
+        return self.filename
