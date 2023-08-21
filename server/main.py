@@ -81,7 +81,7 @@ def get_sha256(content: UploadedFile, metadata: Metadata) -> str:
 
 def get_metadata(content: UploadedFile) -> bytes:
     data = b""
-    if content.name.endswith(".tar.gz"):
+    if not content.name.endswith(".whl"):
         return data
     with ZipFile(content) as zipfile:
         for info in zipfile.infolist():
@@ -141,10 +141,13 @@ def packages(
         msg = f"{name!r} package does not exist."
         raise HttpError(404, msg)
 
-    response["Content-Type"] = "application/vnd.pypi.simple.v1+json"
     ret = {"meta": {"api-version": "1.0"}, "name": name, "files": []}
 
     for package in packages:
+        if not Path(package.file.path).exists():
+            package.delete()
+            continue
+
         data = {
             "filename": package.filename,
             "url": urljoin(request.build_absolute_uri("/"), package.file.url),
@@ -155,6 +158,12 @@ def packages(
         if package.metadata:
             data["dist-info-metadata"] = package.dist_info_metadata
         ret["files"].append(data)
+
+    if not ret["files"]:
+        msg = f"{name!r} package does not exist."
+        raise HttpError(404, msg)
+
+    response["Content-Type"] = "application/vnd.pypi.simple.v1+json"
     return ret
 
 
