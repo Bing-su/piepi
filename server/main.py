@@ -156,7 +156,7 @@ def packages(
         if package.requires_python:
             data["requires-python"] = package.requires_python
         if package.metadata:
-            data["dist-info-metadata"] = package.dist_info_metadata
+            data["core-metadata"] = package.dist_info_metadata
         ret["files"].append(data)
 
     if not ret["files"]:
