@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import Path
 
@@ -7,6 +8,7 @@ from dotenv import find_dotenv, load_dotenv, set_key
 
 from .settings import *  # noqa: F403
 
+logger = logging.getLogger("piepi")
 dotenv_path = Path(find_dotenv() or Path(__file__).parent.parent.joinpath(".env"))
 dotenv_path.touch(exist_ok=True)
 load_dotenv(dotenv_path)
