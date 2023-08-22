@@ -16,6 +16,9 @@ colorama==0.4.6 ; python_version >= "3.9" and python_version < "4.0" and platfor
 django-cleanup==8.0.0 ; python_version >= "3.9" and python_version < "4.0" \
     --hash=sha256:8cd8872d67fe1501b19a843d006cdb5673cfbb74ac3d6d8f2c60e8e7723a7f5b \
     --hash=sha256:c739a05544e1e48dc848871c870dbf1595f8533d24523bc67360e43562edaf0d
+django-cors-headers==4.2.0 ; python_version >= "3.9" and python_version < "4.0" \
+    --hash=sha256:9ada212b0e2efd4a5e339360ffc869cb21ac5605e810afe69f7308e577ea5bde \
+    --hash=sha256:f9749c6410fe738278bc2b6ef17f05195bc7b251693c035752d8257026af024f
 django-ninja==1.0a3 ; python_version >= "3.9" and python_version < "4.0" \
     --hash=sha256:0896f93e92b378b04603ff0c9a2696710bd2f13072395c1d41fa3b288631c564 \
     --hash=sha256:b693f70040aca928cc58061916b96b43a596340aeb4885157da424cfee80e622
