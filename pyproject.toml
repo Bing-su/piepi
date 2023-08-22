@@ -9,11 +9,11 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.9"
 django-ninja = ">=1.0a3"
-django-cleanup = "8.0.0"
-whitenoise = "^6.5.0"
+django-cleanup = ">=8.0.0"
+whitenoise = ">=6.5.0"
 orjson = "*"
-python-dotenv = "^1.0.0"
-granian = "^0.5.3"
+python-dotenv = ">=1.0.0"
+granian = ">=0.5.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
