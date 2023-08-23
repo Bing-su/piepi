@@ -136,9 +136,9 @@ def packages(
 ):
     name = normalize(name)
 
+    msg = f"{name!r} package does not exist."
     packages = Package.objects.filter(name=name)
     if not packages.exists():
-        msg = f"{name!r} package does not exist."
         raise HttpError(404, msg)
 
     ret = {"meta": {"api-version": "1.0"}, "name": name, "files": []}
@@ -160,7 +160,6 @@ def packages(
         ret["files"].append(data)
 
     if not ret["files"]:
-        msg = f"{name!r} package does not exist."
         raise HttpError(404, msg)
 
     response["Content-Type"] = "application/vnd.pypi.simple.v1+json"
@@ -180,15 +179,14 @@ def download(
         metadata = True
         filename = filename.removesuffix(".metadata")
 
+    msg = f"{filename!r} does not exist."
     try:
         package = Package.objects.get(filename=filename)
     except Package.DoesNotExist as e:
-        msg = f"{name!r} package does not exist."
         raise HttpError(404, msg) from e
 
     if not Path(package.file.path).exists():
         package.delete()
-        msg = f"{name!r} package does not exist."
         raise HttpError(404, msg)
 
     if metadata:
