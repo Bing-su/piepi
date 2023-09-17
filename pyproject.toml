@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "piepi"
-version = "0.1.0"
+version = "0.1.1"
 description = "pypi"
 authors = ["Bingsu <ks2515@naver.com>"]
 license = "MIT"
@@ -8,13 +8,13 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-django-ninja = ">=1.0a3"
+django-ninja = ">=1.0b1"
 django-cleanup = ">=8.0.0"
 django-cors-headers = ">=4.2.0"
 whitenoise = ">=6.5.0"
 orjson = "*"
 python-dotenv = ">=1.0.0"
-granian = ">=0.5.3"
+granian = ">=0.6.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
